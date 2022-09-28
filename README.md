@@ -1,3 +1,3 @@
 # BazaarCraft
 
-![GitHub](https://img.shields.io/github/license/AmiralFrijoles/BazaarCraft?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/AdmiralFrijoles/BazaarCraft?style=for-the-badge)
