@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.crypticelement.bazaarcraft.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "mixins.bazaarcraft.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}
