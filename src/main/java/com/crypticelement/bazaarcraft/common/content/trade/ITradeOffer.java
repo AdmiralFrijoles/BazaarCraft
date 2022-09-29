@@ -3,7 +3,6 @@ package com.crypticelement.bazaarcraft.common.content.trade;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 
-// Loosly based on MerchantOffer
 public interface ITradeOffer {
     /**
      * @return The number of times the trade could be performed

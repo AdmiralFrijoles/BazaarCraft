@@ -21,15 +21,15 @@ public class ItemStackTradeRequirement implements ITradeRequirement {
     }
 
     private TradeRequirementResult tryCollect(ITradeBroker broker, boolean simulate) {
-        if (!(broker instanceof IItemStackInput itemStackInput))
+        if (!(broker.getBuyer() instanceof IItemStackPaymentSource buyerPaymentSource))
             return TradeRequirementResult.ERROR;
-        if (!(broker instanceof IItemStackOutput itemStackOutput))
+        if (!(broker.getSeller() instanceof IItemStackPaymentDestination sellerPaymentDestination))
             return TradeRequirementResult.ERROR;
 
-        var inputItemHandler = itemStackInput.getInputItemHandler();
-        if (inputItemHandler == null) return TradeRequirementResult.ERROR;
-        var outputItemHandler = itemStackOutput.getOutputItemHandler();
-        if (outputItemHandler == null) return TradeRequirementResult.ERROR;
+        var sourceItemHandler = buyerPaymentSource.getSourceItemHandler();
+        if (sourceItemHandler == null) return TradeRequirementResult.ERROR;
+        var destinationItemHandler = sellerPaymentDestination.getDestinationItemHandler();
+        if (destinationItemHandler == null) return TradeRequirementResult.ERROR;
 
         if (!filter.isValidFilter()) return ERROR_INVALID_FILTER;
 
@@ -37,15 +37,15 @@ public class ItemStackTradeRequirement implements ITradeRequirement {
 
         int quantityToCollect = quantity;
 
-        var numSlots = inputItemHandler.getSlots();
+        var numSlots = sourceItemHandler.getSlots();
         for (int slot = 0; slot < numSlots; slot++) {
-            var itemStack = inputItemHandler.getStackInSlot(slot);
+            var itemStack = sourceItemHandler.getStackInSlot(slot);
             if (filter.canFilter(itemStack)) {
                 var quantityToTake = Math.min(quantityToCollect, itemStack.getCount());
-                var collectedItemStack = inputItemHandler.extractItem(slot, quantityToTake, simulate);
+                var collectedItemStack = sourceItemHandler.extractItem(slot, quantityToTake, simulate);
                 quantityToTake = collectedItemStack.getCount();
 
-                collectedItemStack = ItemHandlerHelper.insertItemStacked(outputItemHandler, collectedItemStack, simulate);
+                collectedItemStack = ItemHandlerHelper.insertItemStacked(destinationItemHandler, collectedItemStack, simulate);
                 if (!collectedItemStack.isEmpty()) // unable to insert all that was taken
                     quantityToCollect -= quantityToTake - collectedItemStack.getCount();
                 else
@@ -60,7 +60,6 @@ public class ItemStackTradeRequirement implements ITradeRequirement {
         return ERROR_MISSING_ITEMS;
     }
 
-    //IItemHandlerModifiable
     @Override
     public TradeRequirementResult isSatisfied(ITradeBroker broker) {
         return tryCollect(broker, true);
@@ -70,7 +69,10 @@ public class ItemStackTradeRequirement implements ITradeRequirement {
     public void collect(ITradeBroker broker) {
         if (!isSatisfied(broker).isSuccess()) return;
 
-        tryCollect(broker, false);
+        var result = tryCollect(broker, false);
+        if (!result.isSuccess()) {
+            BazaarCraft.LOGGER.error("Trade collection failed: " + result.getErrorId());
+        }
     }
 
     @Override

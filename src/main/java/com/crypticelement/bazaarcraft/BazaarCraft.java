@@ -16,6 +16,7 @@ public class BazaarCraft {
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
+
     public BazaarCraft() {
         var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         var forgeEventBus = MinecraftForge.EVENT_BUS;
@@ -28,6 +29,5 @@ public class BazaarCraft {
     }
 
     public static void init(final FMLCommonSetupEvent event) {
-
     }
 }

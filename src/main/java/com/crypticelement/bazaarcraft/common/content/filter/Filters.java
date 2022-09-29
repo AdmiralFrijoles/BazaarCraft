@@ -17,7 +17,7 @@ public class Filters {
     private static final Supplier<IForgeRegistry<FilterType>> REGISTRY = FILTER_TYPES.makeRegistry(FilterType.class, RegistryBuilder::new);
 
 
-    public static final RegistryObject<FilterType> TRADE_ITEM_TAG_FILTER = FILTER_TYPES.register("TradeItemTagFilterType", TradeItemTagFilterType::new);
+    public static final RegistryObject<FilterType> TRADE_ITEM_TAG_FILTER = FILTER_TYPES.register("trade_item_tag", TradeItemTagFilterType::new);
 
 
     public static FilterType get(ResourceLocation resourceLocation) {
