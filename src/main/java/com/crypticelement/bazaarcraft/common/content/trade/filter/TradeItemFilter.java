@@ -1,4 +1,4 @@
-package com.crypticelement.bazaarcraft.common.content.trade;
+package com.crypticelement.bazaarcraft.common.content.trade.filter;
 
 import com.crypticelement.bazaarcraft.common.content.filter.FilterBase;
 import net.minecraft.nbt.CompoundTag;
@@ -6,8 +6,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class TradeItemFilter<FILTER extends TradeItemFilter<FILTER>> extends FilterBase<FILTER> {
-
-
     protected TradeItemFilter() {
     }
 

@@ -1,7 +1,7 @@
 package com.crypticelement.bazaarcraft.common.content.filter;
 
 import com.crypticelement.bazaarcraft.BazaarCraft;
-import com.crypticelement.bazaarcraft.common.content.trade.TradeItemTagFilterType;
+import com.crypticelement.bazaarcraft.common.content.trade.filter.TradeItemTagFilterType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;

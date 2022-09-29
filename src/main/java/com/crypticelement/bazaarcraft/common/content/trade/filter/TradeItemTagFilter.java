@@ -1,4 +1,4 @@
-package com.crypticelement.bazaarcraft.common.content.trade;
+package com.crypticelement.bazaarcraft.common.content.trade.filter;
 
 import com.crypticelement.bazaarcraft.common.content.filter.FilterType;
 import com.crypticelement.bazaarcraft.common.content.filter.Filters;
