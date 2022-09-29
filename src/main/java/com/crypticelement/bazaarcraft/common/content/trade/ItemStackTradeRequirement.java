@@ -1,108 +1,34 @@
 package com.crypticelement.bazaarcraft.common.content.trade;
 
 import com.crypticelement.bazaarcraft.BazaarCraft;
-import com.crypticelement.bazaarcraft.common.content.filter.FilterBase;
 import com.crypticelement.bazaarcraft.common.content.trade.filter.TradeItemFilter;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ItemStackTradeRequirement implements ITradeRequirement {
-    private static final TradeRequirementResult ERROR_INVALID_FILTER = new TradeRequirementResult("trade.bazaarcraft.error.invalid_filter");
-    private static final TradeRequirementResult ERROR_MISSING_ITEMS = new TradeRequirementResult("trade.bazaarcraft.error.missing_required_items");
-
-
-    private TradeItemFilter<?> filter;
-    private int quantity;
-
+public class ItemStackTradeRequirement extends ItemStackFilterTradeBase implements ITradeRequirement {
     public ItemStackTradeRequirement(TradeItemFilter<?> filter, int quantity) {
-        this.filter = filter;
-        this.quantity = quantity;
+        super(filter, quantity);
     }
 
-    private TradeRequirementResult tryCollect(ITradeBroker broker, boolean simulate) {
-        if (!(broker.getBuyer() instanceof IItemStackPaymentSource buyerPaymentSource))
-            return TradeRequirementResult.ERROR;
-        if (!(broker.getSeller() instanceof IItemStackPaymentDestination sellerPaymentDestination))
-            return TradeRequirementResult.ERROR;
+    protected TradeCheckResult tryProcess(ITradeBroker broker, boolean simulate) {
+        if (!(broker.getBuyer() instanceof IItemStackPaymentSource paymentSource))
+            return TradeCheckResult.ERROR;
+        if (!(broker.getSeller() instanceof IItemStackPaymentDestination paymentDestination))
+            return TradeCheckResult.ERROR;
 
-        var sourceItemHandler = buyerPaymentSource.getSourceItemHandler();
-        if (sourceItemHandler == null) return TradeRequirementResult.ERROR;
-        var destinationItemHandler = sellerPaymentDestination.getDestinationItemHandler();
-        if (destinationItemHandler == null) return TradeRequirementResult.ERROR;
-
-        if (!filter.isValidFilter()) return ERROR_INVALID_FILTER;
-
-        if (quantity <= 0) return TradeRequirementResult.SUCCESS;
-
-        int quantityToCollect = quantity;
-
-        var numSlots = sourceItemHandler.getSlots();
-        for (int slot = 0; slot < numSlots; slot++) {
-            var itemStack = sourceItemHandler.getStackInSlot(slot);
-            if (filter.canFilter(itemStack)) {
-                var quantityToTake = Math.min(quantityToCollect, itemStack.getCount());
-                var collectedItemStack = sourceItemHandler.extractItem(slot, quantityToTake, simulate);
-                quantityToTake = collectedItemStack.getCount();
-
-                collectedItemStack = ItemHandlerHelper.insertItemStacked(destinationItemHandler, collectedItemStack, simulate);
-                if (!collectedItemStack.isEmpty()) // unable to insert all that was taken
-                    quantityToCollect -= quantityToTake - collectedItemStack.getCount();
-                else
-                    quantityToCollect -= quantityToTake;
-
-                if (quantityToCollect <= 0) {
-                    return TradeRequirementResult.SUCCESS;
-                }
-            }
-        }
-
-        return ERROR_MISSING_ITEMS;
+        return tryProcess(paymentSource, paymentDestination, simulate);
     }
 
     @Override
-    public TradeRequirementResult isSatisfied(ITradeBroker broker) {
-        return tryCollect(broker, true);
+    public TradeCheckResult isSatisfied(ITradeBroker broker) {
+        return tryProcess(broker, true);
     }
 
     @Override
     public void collect(ITradeBroker broker) {
         if (!isSatisfied(broker).isSuccess()) return;
 
-        var result = tryCollect(broker, false);
+        var result = tryProcess(broker, false);
         if (!result.isSuccess()) {
             BazaarCraft.LOGGER.error("Trade collection failed: " + result.getErrorId());
         }
-    }
-
-    @Override
-    public CompoundTag write(CompoundTag nbt) {
-        nbt.put("filter", filter.write(new CompoundTag()));
-        nbt.putInt("quantity", quantity);
-        return nbt;
-    }
-
-    @Override
-    public void read(CompoundTag nbt) {
-        try {
-            this.filter = (TradeItemFilter<?>) FilterBase.readFromNBT(nbt.getCompound("filter"));
-        }
-        catch (Exception e) {
-            BazaarCraft.LOGGER.error("Unable to load filter", e);
-        }
-
-        this.quantity = nbt.getInt("quantity");
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buffer) {
-        filter.write(buffer);
-        buffer.writeInt(quantity);
-    }
-
-    @Override
-    public void read(FriendlyByteBuf data) {
-        this.filter = (TradeItemFilter<?>) FilterBase.readFromPacket(data);
-        this.quantity = data.readInt();
     }
 }

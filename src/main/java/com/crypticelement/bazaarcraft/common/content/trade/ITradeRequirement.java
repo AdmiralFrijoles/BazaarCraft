@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 
 public interface ITradeRequirement {
-    TradeRequirementResult isSatisfied(ITradeBroker broker);
+    TradeCheckResult isSatisfied(ITradeBroker broker);
 
     void collect(ITradeBroker broker);
 

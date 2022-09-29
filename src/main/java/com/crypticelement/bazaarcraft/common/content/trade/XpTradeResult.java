@@ -1,17 +1,16 @@
 package com.crypticelement.bazaarcraft.common.content.trade;
 
 import com.crypticelement.bazaarcraft.BazaarCraft;
-import com.crypticelement.bazaarcraft.common.content.trade.filter.TradeItemFilter;
 
-public class ItemStackTradeResult extends ItemStackFilterTradeBase implements ITradeResult {
-    public ItemStackTradeResult(TradeItemFilter<?> filter, int quantity) {
-        super(filter, quantity);
+public class XpTradeResult extends XpTradeBase implements ITradeResult {
+    public XpTradeResult(int totalExperience) {
+        super(totalExperience);
     }
 
     protected TradeCheckResult tryProcess(ITradeBroker broker, boolean simulate) {
-        if (!(broker.getSeller() instanceof IItemStackPaymentSource paymentSource))
+        if (!(broker.getSeller() instanceof IXpPaymentSource paymentSource))
             return TradeCheckResult.ERROR;
-        if (!(broker.getBuyer() instanceof IItemStackPaymentDestination paymentDestination))
+        if (!(broker.getBuyer() instanceof IXpPaymentDestination paymentDestination))
             return TradeCheckResult.ERROR;
 
         return tryProcess(paymentSource, paymentDestination, simulate);

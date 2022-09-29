@@ -1,17 +1,17 @@
 package com.crypticelement.bazaarcraft.common.content.trade;
-public class TradeRequirementResult {
-    public static final TradeRequirementResult SUCCESS = new TradeRequirementResult(true, null);
-    public static final TradeRequirementResult ERROR = new TradeRequirementResult(false, null);
+public class TradeCheckResult {
+    public static final TradeCheckResult SUCCESS = new TradeCheckResult(true, null);
+    public static final TradeCheckResult ERROR = new TradeCheckResult(false, null);
 
     private final boolean success;
     private final String errorId;
 
-    private TradeRequirementResult(boolean success, String errorId) {
+    private TradeCheckResult(boolean success, String errorId) {
         this.success = success;
         this.errorId = errorId;
     }
 
-    public TradeRequirementResult(String errorId) {
+    public TradeCheckResult(String errorId) {
         this.success = false;
         this.errorId = errorId;
     }

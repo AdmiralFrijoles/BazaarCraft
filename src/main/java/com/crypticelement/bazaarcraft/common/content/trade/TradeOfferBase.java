@@ -11,14 +11,14 @@ public abstract class TradeOfferBase implements ITradeOffer {
     protected final List<ITradeResult> results = new ArrayList<>();
 
     @Override
-    public TradeRequirementResult isSatisfied(ITradeBroker broker) {
+    public TradeCheckResult isSatisfied(ITradeBroker broker) {
         for (var requirement : requirements) {
             var result = requirement.isSatisfied(broker);
             if (!result.isSuccess())
                 return result;
         }
 
-        return TradeRequirementResult.SUCCESS;
+        return TradeCheckResult.SUCCESS;
     }
 
     @Override

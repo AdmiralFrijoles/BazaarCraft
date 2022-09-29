@@ -1,6 +1,7 @@
 package com.crypticelement.bazaarcraft.common.content.filter;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class FilterBase<FILTER extends FilterBase<FILTER>> implements IFilter<FILTER> {
     @Nullable
     public static IFilter<?> readFromNBT(CompoundTag nbt) {
-        if (!nbt.contains("type", CompoundTag.TAG_STRING))
+        if (!nbt.contains("type", Tag.TAG_STRING))
             return null;
 
         var filterTypeId = nbt.getString("type");

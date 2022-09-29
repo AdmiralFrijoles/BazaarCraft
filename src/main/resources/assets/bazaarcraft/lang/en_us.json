@@ -1,4 +1,7 @@
 {
   "trade.bazaarcraft.error.invalid_filter": "Invalid Filter",
-  "trade.bazaarcraft.error.missing_required_items": "Missing Required Items"
+  "trade.bazaarcraft.error.missing_required_items": "Missing Required Items",
+
+  "trade.bazaarcraft.error.source_not_enough_xp": "Not Enough Experience",
+  "trade.bazaarcraft.error.destination_xp_full": "Experience Full"
 }

@@ -1,7 +1,7 @@
 package com.crypticelement.bazaarcraft.common.content.trade;
 
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandler;
 
 public interface IItemStackPaymentDestination {
-    IItemHandlerModifiable getDestinationItemHandler();
+    IItemHandler getDestinationItemHandler();
 }

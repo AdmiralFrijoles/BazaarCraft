@@ -1,30 +1,29 @@
 package com.crypticelement.bazaarcraft.common.content.trade;
 
 import com.crypticelement.bazaarcraft.BazaarCraft;
-import com.crypticelement.bazaarcraft.common.content.trade.filter.TradeItemFilter;
 
-public class ItemStackTradeResult extends ItemStackFilterTradeBase implements ITradeResult {
-    public ItemStackTradeResult(TradeItemFilter<?> filter, int quantity) {
-        super(filter, quantity);
+public class XpTradeRequirement extends XpTradeBase implements ITradeRequirement {
+    public XpTradeRequirement(int totalExperience) {
+        super(totalExperience);
     }
 
     protected TradeCheckResult tryProcess(ITradeBroker broker, boolean simulate) {
-        if (!(broker.getSeller() instanceof IItemStackPaymentSource paymentSource))
+        if (!(broker.getBuyer() instanceof IXpPaymentSource paymentSource))
             return TradeCheckResult.ERROR;
-        if (!(broker.getBuyer() instanceof IItemStackPaymentDestination paymentDestination))
+        if (!(broker.getSeller() instanceof IXpPaymentDestination paymentDestination))
             return TradeCheckResult.ERROR;
 
         return tryProcess(paymentSource, paymentDestination, simulate);
     }
 
     @Override
-    public TradeCheckResult canDispense(ITradeBroker broker) {
+    public TradeCheckResult isSatisfied(ITradeBroker broker) {
         return tryProcess(broker, true);
     }
 
     @Override
-    public void dispense(ITradeBroker broker) {
-        if (!canDispense(broker).isSuccess()) return;
+    public void collect(ITradeBroker broker) {
+        if (!isSatisfied(broker).isSuccess()) return;
 
         var result = tryProcess(broker, false);
         if (!result.isSuccess()) {

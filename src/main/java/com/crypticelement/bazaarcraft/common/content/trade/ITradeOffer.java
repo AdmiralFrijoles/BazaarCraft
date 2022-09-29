@@ -19,7 +19,7 @@ public interface ITradeOffer {
     /**
      * @return True if the trade can be completed
      */
-    TradeRequirementResult isSatisfied(ITradeBroker broker);
+    TradeCheckResult isSatisfied(ITradeBroker broker);
 
     /**
      * Accept the trade
