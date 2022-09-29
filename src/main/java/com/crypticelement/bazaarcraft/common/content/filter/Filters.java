@@ -24,7 +24,7 @@ public class Filters {
         return REGISTRY.get().getValue(resourceLocation);
     }
 
-    public static void init() {
+    public static void register() {
         FILTER_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 }
